@@ -44,7 +44,7 @@ function make_diff {
     patchfile="${patchdir}/${project}.patch"
     pushd $projectdir > /dev/null
     # Eval is necessary to prevent bash from quoting the exclude argument.
-    cmd="git diff ${upstream_remote}/master...HEAD -- . ${exclude}"
+    cmd="git diff -U999999 ${upstream_remote}/master...HEAD -- . ${exclude}"
     eval $cmd > $patchfile
     echo "Wrote patch file $patchfile."
     popd > /dev/null
