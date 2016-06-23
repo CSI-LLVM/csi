@@ -15,7 +15,7 @@ CXX = $(LLVM_BUILDDIR)/bin/clang++
 CFLAGS += -I$(CSI_INCDIR)
 CXXFLAGS += -I$(CSI_INCDIR)
 
-TOOLS := print_tool counter_tool code-coverage instrument_function prof_lite props_tool bb-counter fed_test callsites_test demo_tool mem_tracer simple_mem_tracer
+TOOLS := counter_tool code-coverage prof_lite demo_tool mem_tracer
 OBJECTS := $(patsubst %,%.o,$(TOOLS))
 
 all: $(TOOLS)
