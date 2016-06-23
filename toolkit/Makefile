@@ -13,7 +13,7 @@ CC = $(LLVM_BUILDDIR)/bin/clang
 CXX = $(LLVM_BUILDDIR)/bin/clang++
 
 CFLAGS += -I$(CSI_INCDIR)
-CXXFLAGS += -I$(CSI_INCDIR)
+CXXFLAGS += -I$(CSI_INCDIR) -std=c++11
 
 TOOLS := mem-counter code-coverage prof-lite demo-tool mem-tracer
 OBJECTS := $(patsubst %,%.o,$(TOOLS))
