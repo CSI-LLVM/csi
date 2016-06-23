@@ -43,15 +43,12 @@ function build {
     popd
 }
 
-function testtools {
-    export COMPILER_HOME=$(realpath $CLONEDIR/build)
-    pushd $CLONEDIR/projects/compiler-rt/test/csi/simple
-    make clean
-    make TOOL=print_tool
-    ./foo
+function checkcsi {
+    pushd $CLONEDIR/build
+    make check-csi
     popd
 }
 
 configure
 build
-testtools
+checkcsi
