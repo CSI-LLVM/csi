@@ -107,7 +107,7 @@ void __csi_bb_exit(const csi_id_t bb_id) {
 void __csi_before_call(const csi_id_t callsite_id, const csi_id_t func_id) {
     print_indentation();
     fprintf_cyan(stderr, "__csi_before_call: Calling function ID ");
-    if (__csirt_is_callsite_target_unknown(callsite_id, func_id)) {
+    if (func_id == UNKNOWN_CSI_ID) {
         fprintf_cyan(stderr, "<unknown> ");
     } else {
         callstack->push(func_id);
@@ -123,7 +123,7 @@ void __csi_before_call(const csi_id_t callsite_id, const csi_id_t func_id) {
 void __csi_after_call(const csi_id_t callsite_id, const csi_id_t func_id) {
     print_indentation();
     fprintf_cyan(stderr, "__csi_after_call: After call to function ID ");
-    if (__csirt_is_callsite_target_unknown(callsite_id, func_id)) {
+    if (func_id == UNKNOWN_CSI_ID) {
         fprintf_cyan(stderr, "<unknown> ");
     } else {
         callstack->pop();
