@@ -1,46 +1,39 @@
 #include "csi.h"
 #include "bitset.h"
+#include "vector.h"
 #include <cassert>
 #include <cstdlib>
 #include <cstdio>
-#include <vector>
 
 namespace {
 
-std::vector<Bitset> *bitsets = NULL;
+Bitset *bitset = NULL;
+uint64_t total_num_basic_blocks = 0;
 
-void destroy() {
-    unsigned num_basic_blocks = 0, num_covered = 0;
-    for (unsigned i = 0; i < bitsets->size(); i++) {
-        num_basic_blocks += bitsets->at(i).size();
-        num_covered += bitsets->at(i).count();
-    }
+void report() {
+    uint64_t num_covered = bitset->count();
     printf("Code coverage summary:\n");
-    printf("%d/%d (%.02f%%) basic blocks executed.\n", num_covered, num_basic_blocks,
-           ((float)num_covered/num_basic_blocks)*100);
+    printf("%lu/%lu (%.02f%%) basic blocks executed.\n", num_covered, total_num_basic_blocks,
+           ((float)num_covered/total_num_basic_blocks)*100);
 }
 
 }
 
 extern "C" {
 
-// void __csi_init(csi_info_t info) {
-void __csi_init(uint32_t num_modules) {
-    atexit(destroy);
-    bitsets = new std::vector<Bitset>(num_modules);
+void __csi_init() {
+    atexit(report);
+    bitset = new Bitset();
 }
 
-// void __csi_module_init(csi_module_info_t info) {
-void __csi_module_init(uint32_t module_id, uint64_t num_basic_blocks) {
-    assert(bitsets && module_id < bitsets->size());
-    bitsets->at(module_id).allocate(num_basic_blocks);
+void __csi_unit_init(const char * const file_name,
+                     const instrumentation_counts_t counts) {
+    total_num_basic_blocks += counts.num_bb;
+    bitset->expand(total_num_basic_blocks);
 }
 
-// void __csi_bb_entry(csi_id_t id) {
-void __csi_bb_entry(uint32_t module_id, uint64_t id) {
-    assert(bitsets && module_id < bitsets->size());
-    assert(id < (*bitsets)[module_id].size());
-    (*bitsets)[module_id].set(id);
+void __csi_bb_entry(const csi_id_t bb_id) {
+    bitset->set(bb_id);
 }
 
 } // extern "C"

@@ -16,10 +16,10 @@ private:
     typedef unsigned char elt_t;
     static const unsigned _eltbits = sizeof(elt_t) * 8;
 
-    unsigned _nbits, _nelts;
+    uint64_t _nbits, _nelts;
     elt_t *_data;
 
-    inline void bit2elt(unsigned bit, unsigned &elt, unsigned &off) const {
+    inline void bit2elt(uint64_t bit, uint64_t &elt, unsigned &off) const {
         elt = bit / _eltbits;
         off = bit % _eltbits;
     }
@@ -27,38 +27,47 @@ private:
 public:
     Bitset() : _nbits(0), _nelts(0), _data(NULL) {}
 
-    Bitset(unsigned N) {
+    Bitset(uint64_t N) {
         allocate(N);
     }
 
-    void allocate(unsigned N) {
+    void allocate(uint64_t N) {
         _nbits = N;
         _nelts = CEILING(_nbits, _eltbits);
         _data = (elt_t *)calloc(_nelts, sizeof(elt_t));
         assert(_data);
     }
 
-    inline void set(unsigned bit) {
-        unsigned elt, off;
+    void expand(uint64_t N) {
+        _nbits += N;
+        _nelts = CEILING(_nbits, _eltbits);
+        _data = (elt_t *)realloc(_data, _nelts * sizeof(elt_t));
+        assert(_data);
+    }
+
+    inline void set(uint64_t bit) {
+        uint64_t elt;
+        unsigned off;
         bit2elt(bit, elt, off);
         _data[elt] |= 1 << off;
     }
 
-    inline void clear(unsigned bit) {
-        unsigned elt, off;
+    inline void clear(uint64_t bit) {
+        uint64_t elt;
+        unsigned off;
         bit2elt(bit, elt, off);
         _data[elt] &= ~(1 << off);
     }
 
-    unsigned count() const {
-        unsigned result = 0;
-        for (unsigned i = 0; i < _nelts; i++) {
+    uint64_t count() const {
+        uint64_t result = 0;
+        for (uint64_t i = 0; i < _nelts; i++) {
             result += __builtin_popcount(_data[i]);
         }
         return result;
     }
 
-    unsigned size() const {
+    uint64_t size() const {
         return _nbits;
     }
 };
