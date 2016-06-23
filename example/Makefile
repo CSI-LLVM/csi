@@ -8,21 +8,21 @@ CXX = $(LLVM_BUILDDIR)/bin/clang++
 CXXFLAGS = -g -O0
 LDFLAGS = -fuse-ld=gold -flto
 
-TOOLKIT = ../toolkit
 TOOL = mem-tracer
+TOOLKIT = ../toolkit
 TOOL_OBJ = $(TOOLKIT)/$(TOOL).o
 
-default: simple
+default: main
 
+.PHONY: $(TOOL_OBJ)
 $(TOOL_OBJ):
-	make -C $(TOOLKIT) $(TOOL_OBJ)
+	@test -f $(TOOL_OBJ) || (echo Please \"make $(TOOL).o\" in directory \"$(TOOLKIT)\" and then rerun make here.; exit 1)
 
-simple.o: simple.cpp $(TOOL_OBJ)
+main.o: main.cpp $(TOOL_OBJ)
 	$(CXX) $(CXXFLAGS) -fcsi -emit-llvm -c $< -o $@
 
-simple: simple.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) simple.o $(TOOL_OBJ) $(CSI_RTLIBA)
+main: main.o
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) main.o $(TOOL_OBJ) $(CSI_RTLIBA) -o $@
 
 clean:
-	rm -f simple.o
-	make -C $(TOOLKIT) clean
+	rm -f main.o main
