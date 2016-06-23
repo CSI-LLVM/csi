@@ -8,7 +8,7 @@ CXX = $(LLVM_BUILDDIR)/bin/clang++
 CXXFLAGS = -g -O0
 LDFLAGS = -fuse-ld=gold -flto
 
-TOOL = mem-tracer
+TOOL = code-coverage
 TOOLKIT = ../toolkit
 TOOL_OBJ = $(TOOLKIT)/$(TOOL).o
 

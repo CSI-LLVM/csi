@@ -52,6 +52,13 @@ public:
         _data[elt] |= 1 << off;
     }
 
+    inline bool get(uint64_t bit) const {
+        uint64_t elt;
+        unsigned off;
+        bit2elt(bit, elt, off);
+        return (_data[elt] & (1 << off)) != 0;
+    }
+
     inline void clear(uint64_t bit) {
         uint64_t elt;
         unsigned off;

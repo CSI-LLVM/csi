@@ -15,8 +15,15 @@ void report() {
     printf("Code coverage summary:\n");
     printf("%lu/%lu (%.02f%%) basic blocks executed.\n", num_covered, total_num_basic_blocks,
            ((float)num_covered/total_num_basic_blocks)*100);
-}
 
+    for (csi_id_t id = 0; id < total_num_basic_blocks; id++) {
+        if (bitset->get(id) == false) {
+            printf("Basic block ID %ld at %s:%d was not executed.\n", id,
+                         __csi_get_bb_source_loc(id)->filename,
+                         __csi_get_bb_source_loc(id)->line_number);
+        }
+    }
+}
 }
 
 extern "C" {
