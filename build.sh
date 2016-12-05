@@ -51,4 +51,4 @@ function checkcsi {
 
 configure
 build
-checkcsi
+#checkcsi
